@@ -37,11 +37,22 @@ class CorporateActionFetcher:
         for item in data:
             purpose = item.get("subject", "")
             p_info = self.parse_action_type(purpose)
+            ex_dt = item.get("exDate")
+            rec_dt = item.get("recDate")
+            try:
+                ex_date = pd.to_datetime(ex_dt).strftime("%Y-%m-%d") if ex_dt and ex_dt != "-" else None
+            except:
+                ex_date = ex_dt
+            try:
+                rec_date = pd.to_datetime(rec_dt).strftime("%Y-%m-%d") if rec_dt and rec_dt != "-" else None
+            except:
+                rec_date = rec_dt
+
             rows.append({
                 "symbol": item.get("symbol"),
                 "isin": item.get("isin"),
-                "ex_date": item.get("exDate"),
-                "record_date": item.get("recDate"),
+                "ex_date": ex_date,
+                "record_date": rec_date,
                 "action_type": p_info["action_type"],
                 "purpose": purpose,
                 "split_ratio": p_info["split_ratio"],
