@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nse-corporate-actions"
+version = "0.1.0"
+description = "Automated corporate actions and cumulative price adjustment factor engine for Indian equities"
+authors = [{ name = "Prathmesh Gupta" }]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pandas>=2.0.0",
+    "pyarrow>=14.0.0",
+    "requests>=2.31.0",
+    "yfinance>=0.2.30",
+    "numpy>=1.24.0",
+]
