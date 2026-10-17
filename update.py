@@ -35,6 +35,15 @@ def update():
         combined = live_df.copy()
 
     if not combined.empty:
+        # Backfill ISIN from symbol mapping if missing
+        sec_master_csv = ROOT.parent / "nse-security-master" / "output" / "security_master.csv"
+        isin_map = {"RELIANCE": "INE002A01018"}
+        if sec_master_csv.exists():
+            sm = pd.read_csv(sec_master_csv)
+            isin_map.update(dict(zip(sm["current_symbol"], sm["isin"])))
+        combined["isin"] = combined["isin"].fillna(combined["symbol"].map(isin_map))
+        combined["created_at"] = combined["created_at"].fillna(pd.Timestamp.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
+
         combined = combined.dropna(subset=["symbol", "ex_date", "action_type"])
         combined = combined.drop_duplicates(subset=["symbol", "ex_date", "action_type"], keep="last")
         combined = combined.sort_values(by="ex_date", ascending=False)
